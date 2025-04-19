@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ChatApp</title>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+  <div id="loginScreen" class="screen">
+    <h2>تسجيل الدخول</h2>
+    <input type="text" id="usernameInput" placeholder="اسم المستخدم" />
+    <input type="text" id="roomInput" placeholder="رمز الغرفة (اختياري)" />
+    <button onclick="login()">دخول</button>
+  </div>
+
+  <div id="chatScreen" class="screen" style="display:none;">
+    <div class="chat-header">
+      <span id="userDisplay"></span>
+      <span id="roomDisplay"></span>
+      <span id="typingIndicator"></span>
+    </div>
+    <div id="chatBox" class="chat-box"></div>
+    <div class="chat-input">
+      <input type="text" id="messageInput" placeholder="اكتب رسالة..." oninput="typingNow()" />
+      <button onclick="sendMessage()">إرسال</button>
+    </div>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
