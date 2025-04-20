@@ -14,12 +14,21 @@ const database = firebase.database();
 let currentUser = "";
 let currentRoom = "global";
 
+// عند تحميل الصفحة، حاول استرجاع الاسم المحفوظ
+window.onload = () => {
+  const savedName = localStorage.getItem("chat_username");
+  if (savedName) {
+    document.getElementById("usernameInput").value = savedName;
+  }
+};
+
 // تسجيل الدخول
 function login() {
   const username = document.getElementById("usernameInput").value.trim();
   const room = document.getElementById("roomInput").value.trim();
   if (username) {
     currentUser = username;
+    localStorage.setItem("chat_username", currentUser); // حفظ الاسم
     if (room) currentRoom = room;
     document.getElementById("loginScreen").style.display = "none";
     document.getElementById("chatScreen").style.display = "block";
@@ -86,4 +95,27 @@ function listenForTyping() {
     const typingUser = snapshot.val();
     indicator.textContent = (typingUser && typingUser !== currentUser) ? `${typingUser} يكتب الآن...` : "";
   });
+}
+
+// دالة الرجوع لقائمة الغرف
+function goBack() {
+  document.getElementById("chatScreen").style.display = "none";
+  document.getElementById("loginScreen").style.display = "flex";
+
+  // إيقاف الاستماع
+  database.ref(`${currentRoom}/messages`).off();
+  database.ref(`${currentRoom}/typing`).off();
+
+  // تفريغ بيانات الغرفة فقط
+  currentRoom = "global";
+  document.getElementById("roomInput").value = "";
+  document.getElementById("chatBox").innerHTML = "";
+  document.getElementById("typingIndicator").textContent = "";
+
+  // إعادة الاسم من localStorage تلقائي
+  const savedName = localStorage.getItem("chat_username");
+  if (savedName) {
+    currentUser = savedName;
+    document.getElementById("usernameInput").value = savedName;
+  }
 }
