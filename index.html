@@ -8,10 +8,10 @@
 </head>
 <body>
   <div id="loginScreen" class="screen">
-    <h2>تسجيل الدخول</h2>
-    <input type="text" id="usernameInput" placeholder="اسم المستخدم" />
-    <input type="text" id="roomInput" placeholder="رمز الغرفة (اختياري)" />
-    <button onclick="login()">دخول</button>
+    <h2>login</h2>
+    <input type="text" id="usernameInput" placeholder="user name" />
+    <input type="text" id="roomInput" placeholder="Room ID" />
+    <button onclick="login()">join</button>
   </div>
 
   <div id="chatScreen" class="screen" style="display:none;">
@@ -21,13 +21,12 @@
       <span id="typingIndicator"></span>
     </div>
 
-    <!-- زر الرجوع -->
     <button onclick="goBack()" style="align-self: flex-start;">رجوع</button>
 
     <div id="chatBox" class="chat-box"></div>
     <div class="chat-input">
-      <input type="text" id="messageInput" placeholder="اكتب رسالة..." oninput="typingNow()" />
-      <button onclick="sendMessage()">إرسال</button>
+      <input type="text" id="messageInput" placeholder="Write message..." oninput="typingNow()" />
+      <button onclick="sendMessage()">send</button>
     </div>
   </div>
 
