@@ -14,7 +14,6 @@ const database = firebase.database();
 let currentUser = "";
 let currentRoom = "global";
 
-// عند تحميل الصفحة، حاول استرجاع الاسم المحفوظ
 window.onload = () => {
   const savedName = localStorage.getItem("chat_username");
   if (savedName) {
@@ -22,24 +21,22 @@ window.onload = () => {
   }
 };
 
-// تسجيل الدخول
 function login() {
   const username = document.getElementById("usernameInput").value.trim();
   const room = document.getElementById("roomInput").value.trim();
   if (username) {
     currentUser = username;
-    localStorage.setItem("chat_username", currentUser); // حفظ الاسم
+    localStorage.setItem("chat_username", currentUser); 
     if (room) currentRoom = room;
     document.getElementById("loginScreen").style.display = "none";
     document.getElementById("chatScreen").style.display = "block";
-    document.getElementById("userDisplay").textContent = `المستخدم: ${currentUser}`;
-    document.getElementById("roomDisplay").textContent = `الغرفة: ${currentRoom}`;
+    document.getElementById("userDisplay").textContent = `user: ${currentUser}`;
+    document.getElementById("roomDisplay").textContent = `Room ID: ${currentRoom}`;
     listenForMessages();
     listenForTyping();
   }
 }
 
-// إرسال رسالة
 function sendMessage() {
   const msgInput = document.getElementById("messageInput");
   const text = msgInput.value.trim();
@@ -56,7 +53,6 @@ function sendMessage() {
   }
 }
 
-// الاستماع للرسائل
 function listenForMessages() {
   const box = document.getElementById("chatBox");
   database.ref(`${currentRoom}/messages`).on("child_added", (snapshot) => {
@@ -66,7 +62,7 @@ function listenForMessages() {
     div.innerHTML = `<strong>${msg.user}</strong><br>${msg.text}<br><small>${msg.time}</small>`;
     if (msg.user === currentUser) {
       div.onclick = () => {
-        if (confirm("هل تريد حذف الرسالة؟")) {
+        if (confirm("Do you want to delete the message?")) {
           snapshot.ref.remove();
           div.remove();
         }
@@ -77,7 +73,6 @@ function listenForMessages() {
   });
 }
 
-// يكتب الآن...
 function typingNow() {
   setTyping(true);
   if (typingTimeout) clearTimeout(typingTimeout);
@@ -93,26 +88,22 @@ function listenForTyping() {
   const indicator = document.getElementById("typingIndicator");
   database.ref(`${currentRoom}/typing`).on("value", (snapshot) => {
     const typingUser = snapshot.val();
-    indicator.textContent = (typingUser && typingUser !== currentUser) ? `${typingUser} يكتب الآن...` : "";
+    indicator.textContent = (typingUser && typingUser !== currentUser) ? `${typingUser} typing...` : "";
   });
 }
 
-// دالة الرجوع لقائمة الغرف
 function goBack() {
   document.getElementById("chatScreen").style.display = "none";
   document.getElementById("loginScreen").style.display = "flex";
 
-  // إيقاف الاستماع
   database.ref(`${currentRoom}/messages`).off();
   database.ref(`${currentRoom}/typing`).off();
 
-  // تفريغ بيانات الغرفة فقط
   currentRoom = "global";
   document.getElementById("roomInput").value = "";
   document.getElementById("chatBox").innerHTML = "";
   document.getElementById("typingIndicator").textContent = "";
 
-  // إعادة الاسم من localStorage تلقائي
   const savedName = localStorage.getItem("chat_username");
   if (savedName) {
     currentUser = savedName;
